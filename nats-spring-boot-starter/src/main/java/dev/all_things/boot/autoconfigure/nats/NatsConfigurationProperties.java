@@ -1,26 +1,26 @@
-package dev.all_things.boot.nats.configuration;
+package dev.all_things.boot.autoconfigure.nats;
 
 import java.util.List;
 
-/**
- * NATS client configuration.
- */
-public class NatsConnectionConfiguration
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties(prefix = "application.nats")
+public class NatsConfigurationProperties
 {
 	/**
 	 * The list of NATS servers to connect to.
 	 */
-	private List<String> servers;
+	protected List<String> servers;
 
 	/**
 	 * The username for connecting to the NATS server / cluster.
 	 */
-	private String username;
+	protected String username;
 
 	/**
 	 * The password for connecting to the NATS server / cluster.
 	 */
-	private String password;
+	protected String password;
 
 	public List<String> getServers()
 	{

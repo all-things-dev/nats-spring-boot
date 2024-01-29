@@ -121,6 +121,8 @@ Certain attributes of the incoming message can be implicitly extracted and injec
 2. Unannotated parameters of types `io.nats.client.Message`, `java.lang.String` and/or `byte[]`
    are automatically treated as message content and injected accordingly.
 
+4. Add `nats-spring-boot-starter` dependency to your project.
+
 ## Differences from Spring Kafka
 
 1. For better performance, `MethodHandle.invoke` is used (instead of `Method.invoke`) for invoking the listener methods.

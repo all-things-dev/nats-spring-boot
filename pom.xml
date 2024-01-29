@@ -27,6 +27,7 @@
 	<!-- Project modules -->
 	<modules>
 		<module>nats-spring-core</module>
+		<module>nats-spring-boot-starter</module>
 	</modules>
 
 	<!-- Project properties -->

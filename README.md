@@ -7,4 +7,4 @@ TIP: This project is inspired by [Spring Kafka](https://github.com/spring-projec
 
 ## License
 
-Spring for Apache Pulsar is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
+Spring Boot for NATS is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).

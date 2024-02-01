@@ -13,7 +13,7 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
     <dependency>
 	    <groupId>dev.all-things.boot</groupId>
 	    <artifactId>nats-spring-boot-core</artifactId>
-	    <version>${nats-spring-boot}</version>
+	    <version>${nats-spring-boot.version}</version>
     </dependency>
     ```
 

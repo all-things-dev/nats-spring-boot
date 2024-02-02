@@ -1,4 +1,4 @@
-package dev.all_things.boot.nats.annotation;
+package dev.all_things.boot.nats.configuration.annotation;
 
 import java.lang.annotation.*;
 

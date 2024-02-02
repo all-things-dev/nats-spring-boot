@@ -1,12 +1,12 @@
 package dev.all_things.boot.nats.configuration;
 
-import dev.all_things.boot.nats.annotation.EnableNats;
+import dev.all_things.boot.nats.configuration.annotation.EnableNats;
 import org.springframework.context.annotation.DeferredImportSelector;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- * Allows {@link NatsBootstrapConfiguration} to be applied as late as possible.
+ * Provides configuration classes to import for configuring NATS.
  */
 @Order
 public class NatsAnnotationsConfigurationSelector

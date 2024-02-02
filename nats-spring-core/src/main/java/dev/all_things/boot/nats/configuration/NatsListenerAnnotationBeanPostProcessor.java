@@ -1,18 +1,18 @@
 package dev.all_things.boot.nats.configuration;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import dev.all_things.boot.nats.annotation.NatsListener;
-import dev.all_things.boot.nats.listener.NatsMessageListenerContainer;
+import dev.all_things.boot.nats.configuration.annotation.NatsListener;
+import dev.all_things.boot.nats.message.NatsMessageListenerContainer;
+import dev.all_things.boot.nats.message.NatsMessageListenerInitializer;
+import dev.all_things.boot.nats.message.transform.ListenerArgumentGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -20,12 +20,23 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.core.Ordered;
 
+/**
+ * {@link BeanPostProcessor} implementation that processes methods annotated with {@link NatsListener} and
+ * configures corresponding message listeners in the {@link NatsMessageListenerContainer}.
+ *
+ * @see NatsListener
+ * @see NatsMessageListenerContainer
+ */
 public class NatsListenerAnnotationBeanPostProcessor
 		implements ApplicationContextAware, BeanPostProcessor, SmartInitializingSingleton, Ordered
 {
 	private static final Logger logger = LoggerFactory.getLogger(NatsListenerAnnotationBeanPostProcessor.class);
 
-	private final Map<String, Set<MethodHandle>> listeners = new ConcurrentHashMap<>();
+	private static record MethodInfo(MethodHandle handle, ListenerArgumentGenerator argumentGenerator)
+	{
+	}
+
+	private final Set<NatsMessageListenerInitializer> initializers = ConcurrentHashMap.newKeySet();
 	private final Set<Class<?>> ineligibleClasses = ConcurrentHashMap.newKeySet();
 
 	private ApplicationContext context;
@@ -45,24 +56,7 @@ public class NatsListenerAnnotationBeanPostProcessor
 
 		for (final Map.Entry<Method, NatsListener> entry : methods.entrySet())
 		{
-			final Method method = entry.getKey();
-			final NatsListener annotation = entry.getValue();
-
-			logger.info("Found method '{}' with annotation '{}'", method, annotation.subject());
-
-			try
-			{
-				final MethodHandle methodRef = MethodHandles.publicLookup().unreflect(method).bindTo(bean);
-
-				this.listeners.computeIfAbsent(annotation.subject(), key -> ConcurrentHashMap.newKeySet()).add(methodRef);
-			}
-			catch (final IllegalAccessException e)
-			{
-				final String message = String.format("Failed to access method '%s' due to '%s' ..", method.getName(), e.getMessage());
-
-				throw new BeanInitializationException(message, e);
-			}
-
+			this.initializers.add(new NatsMessageListenerInitializer(bean, targetClass, entry.getKey(), entry.getValue()));
 		}
 
 		if (methods.isEmpty())
@@ -78,20 +72,13 @@ public class NatsListenerAnnotationBeanPostProcessor
 	{
 		final var container = this.context.getBean("natsMessageListenerContainer", NatsMessageListenerContainer.class);
 
-		for (final var entry : this.listeners.entrySet())
+		for (final var initializer : this.initializers)
 		{
-			final String subject = entry.getKey();
-			final Set<MethodHandle> methodRefs = entry.getValue();
-
-			for (final MethodHandle methodRef : methodRefs)
-			{
-				container.registerListener(subject, methodRef);
-			}
+			container.registerListener(initializer);
 		}
 
 		container.start();
 	}
-
 
 	private NatsListener findAnnotatedMethods(final Method method)
 	{

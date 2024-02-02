@@ -1,6 +1,5 @@
-package dev.all_things.boot.nats.listener;
+package dev.all_things.boot.nats.message;
 
-import java.lang.invoke.MethodHandle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import jakarta.annotation.PreDestroy;
@@ -25,11 +24,17 @@ public class NatsMessageListenerContainer
 		this.listeners = ConcurrentHashMap.newKeySet();
 	}
 
-	public void registerListener(final String subject, final MethodHandle methodRef)
+	/**
+	 * Registers a {@link NatsMessageListener} using provided initializer.
+	 */
+	public void registerListener(final NatsMessageListenerInitializer initializer)
 	{
-		this.listeners.add(new NatsMessageListener(this.factory.getConnection(), subject, methodRef));
+		this.listeners.add(initializer.initialize(this.factory.getConnection()));
 	}
 
+	/**
+	 * Starts all registered {@link NatsMessageListener}.
+	 */
 	public void start()
 	{
 		logger.info("Initializing NATS message listeners ..");
@@ -39,6 +44,9 @@ public class NatsMessageListenerContainer
 		logger.info("NATS message listeners initialized ..");
 	}
 
+	/**
+	 * Closes all registered {@link NatsMessageListener}.
+	 */
 	@PreDestroy
 	protected void destroy()
 	{

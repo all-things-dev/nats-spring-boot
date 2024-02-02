@@ -7,12 +7,12 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
 
 ## Getting Started
 
-1. Add `nats-spring-boot-core` dependency to your `pom.xml` file:
+1. Add `nats-spring-core` dependency to your `pom.xml` file:
 
     ```xml
     <dependency>
 	    <groupId>dev.all-things.boot</groupId>
-	    <artifactId>nats-spring-boot-core</artifactId>
+	    <artifactId>nats-spring-core</artifactId>
 	    <version>${nats-spring-boot.version}</version>
     </dependency>
     ```

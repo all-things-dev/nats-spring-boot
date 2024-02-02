@@ -26,13 +26,13 @@
 
 	<!-- Project modules -->
 	<modules>
-		<module>nats-spring-boot-core</module>
+		<module>nats-spring-core</module>
 	</modules>
 
 	<!-- Project properties -->
 	<properties>
 
-		<!-- Messaging -->
+		<!-- Communication -->
 		<nats.java-client.version>2.17.3</nats.java-client.version>
 
 		<!-- Compiler configuration -->
@@ -66,11 +66,11 @@
 
 			<dependency>
 				<groupId>dev.all-things.boot</groupId>
-				<artifactId>nats-spring-boot-core</artifactId>
+				<artifactId>nats-spring-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
-			<!-- Messaging -->
+			<!-- Communication -->
 
 			<dependency>
 				<groupId>io.nats</groupId>

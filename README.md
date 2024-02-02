@@ -57,6 +57,11 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
 
 1. For better performance, `MethodHandle.invoke` is used (instead of `Method.invoke`) for invoking the listener methods.
 
+## Software Requirements
+
+1. JDK 17
+2. Spring Boot 3.2 
+
 ## License
 
 This project is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).

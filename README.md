@@ -39,7 +39,11 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
     }
    ```
 
-3. Create a listener class and annotate corresponding method with `@NatsListener` annotation.
+3. Create a listener class and annotate listener method with `@NatsListener` and the subject.
+
+## Usage Examples
+
+1. Simple listener
 
     ```java
     @Component
@@ -52,6 +56,47 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
         }
     }
     ```
+2. Listener with reply
+
+    ```java
+    @Component
+    public class MessageListener
+    {
+        @NatsListener(subject = "zion.neo", replyTo = "zion.trinity")
+        public String onMessage(final String message)
+        {
+            logger.info("Received message: {}", message); // Hello, Neo
+   
+            return "Hello, Trinity"; // Sent to the subject 'zion.trinity'
+        }
+    }
+    ```
+
+## Attribute Injection
+
+Certain attributes of the incoming message can be implicitly extracted and injected as parameters to the listener method.
+
+1. `@Header` allows single message header to be injected to the annotated parameter.
+   `@Headers` injects all message headers as `Map<String, String>`.
+
+    ```java
+    @Component
+    public class MessageListener
+    {
+        @NatsListener(subject = "zion.trinity")
+        public void onMessage(final Message message, final String messageContent, final @Header("id") String messageId,
+                              final @Headers Map<String, String> headers)
+        {
+            logger.info("Received message '{}', content '{}', id '{}', headers '{}'",
+                    message, messageContent, messageId, headers);
+        }
+    }
+    ```
+   **TIP**: Headers can also be injected in multi-value format i.e. `Map<String, List<String>`.
+   `Map<String, String>` serves simple use-cases where headers are expected to have single value.
+
+2. Unannotated parameters of types `io.nats.client.Message`, `java.lang.String` and/or `byte[]`
+   are automatically treated as message content and injected accordingly.
 
 ## Differences from Spring Kafka
 
@@ -60,7 +105,7 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
 ## Software Requirements
 
 1. JDK 17
-2. Spring Boot 3.2 
+2. Spring Boot 3.2
 
 ## License
 

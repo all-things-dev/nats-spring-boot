@@ -22,8 +22,7 @@ public class NatsMessageListenerInitializer
 	private final Class<?> targetClass;
 	private final Method method;
 	private final NatsListener annotation;
-	private final boolean isVoid;
-	private final String replyTo;
+	private final String replySubject;
 
 	private MessageSender messageSender = MessageSender.noOpMessageSender;
 
@@ -42,8 +41,7 @@ public class NatsMessageListenerInitializer
 		this.targetClass = targetClass;
 		this.method = method;
 		this.annotation = annotation;
-		this.isVoid = method.getReturnType() == void.class;
-		this.replyTo = StringUtils.defaultString(annotation.replySubject()).strip();
+		this.replySubject = StringUtils.defaultString(annotation.replySubject()).strip();
 
 		validate();
 	}
@@ -56,15 +54,17 @@ public class NatsMessageListenerInitializer
 
 	private void validate()
 	{
-		if (this.isVoid && !this.replyTo.isBlank())
-		{
-			logger.warn("Ignoring replyTo ('{}') configuration for 'void' listener method '{}' ..",
-					this.replyTo, this.method.getName());
-		}
+		final Class<?> replyType = this.method.getReturnType();
 
-		if (!this.isVoid && !this.replyTo.isBlank())
+		if (replyType != void.class)
 		{
-			this.messageSender = new MessageSender(this.replyTo);
+			// Creating message sender for non-void method
+			this.messageSender = createMessageSender(this.replySubject, replyType);
+		}
+		else if (!this.replySubject.isBlank())
+		{
+			logger.warn("Ignoring reply subject ('{}') configuration for 'void' listener method '{}' ..",
+					this.replySubject, this.method.getName());
 		}
 
 		final Parameter[] parameters = this.method.getParameters();
@@ -89,6 +89,15 @@ public class NatsMessageListenerInitializer
 
 			throw new BeanInitializationException(message, e);
 		}
+	}
+
+	private static MessageSender createMessageSender(final String replySubject, final Class<?> replyType)
+	{
+		if (replyType == Message.class) { return new MessageSender(); }
+		if (replyType == String.class) { return new SimpleMessageSender(replySubject); }
+		if (replyType == byte[].class) { return new RawMessageSender(replySubject); }
+
+		throw new IllegalArgumentException("Unsupported reply type '" + replyType.getName() + "' for listener method");
 	}
 
 	private MessageAttributeConverter createMessageAttributeConverter(final Parameter parameter, final Type parameterType)

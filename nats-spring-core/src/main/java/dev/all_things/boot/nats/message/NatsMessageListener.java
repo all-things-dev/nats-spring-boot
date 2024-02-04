@@ -1,7 +1,6 @@
 package dev.all_things.boot.nats.message;
 
 import java.lang.invoke.MethodHandle;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import dev.all_things.boot.nats.message.transform.ListenerArgumentGenerator;
@@ -52,11 +51,14 @@ public class NatsMessageListener
 
 			if (reply != null)
 			{
-				this.replySender.send(this.connection, reply.toString().getBytes(StandardCharsets.UTF_8));
+				this.replySender.send(this.connection, message, reply);
 			}
 		}
 		catch (final Throwable e)
 		{
+			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
+
 			final String errorMessage = String.format("Failed to invoke message listener for subject '%s' due to '%s' ..", this.subject, e.getMessage());
 
 			throw new RuntimeException(errorMessage, e);

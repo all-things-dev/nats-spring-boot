@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link MessageSender} implementation for sending replies of type {@link byte[]}.
+ * {@link MessageSender} implementation for sending replies of any supported type.
  */
 public class DelegatingMessageSender
 		extends MessageSender

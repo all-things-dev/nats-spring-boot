@@ -28,7 +28,7 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
         @ConditionalOnMissingBean
         public NatsConnectionConfiguration natsConnectionConfiguration()
         {
-            final NatsConnectionConfiguration configuration = new NatsConnectionConfiguration();
+            NatsConnectionConfiguration configuration = new NatsConnectionConfiguration();
     
             configuration.setServers(List.of("nats://0.0.0.0:58811"));
             configuration.setUsername("local");
@@ -50,7 +50,7 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
     public class MessageListener
     {
         @NatsListener(subject = "zion.neo")
-        public void onMessage(final String message)
+        public void onMessage(String message)
         {
             logger.info("Received message: {}", message); // Hello, Neo
         }
@@ -62,8 +62,8 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
     @Component
     public class MessageListener
     {
-        @NatsListener(subject = "zion.neo", replyTo = "zion.trinity")
-        public String onMessage(final String message)
+        @NatsListener(subject = "zion.neo", replySubject = "zion.trinity")
+        public String onMessage(String message)
         {
             logger.info("Received message: {}", message); // Hello, Neo
    
@@ -84,8 +84,8 @@ Certain attributes of the incoming message can be implicitly extracted and injec
     public class MessageListener
     {
         @NatsListener(subject = "zion.trinity")
-        public void onMessage(final Message message, final String messageContent, final @Header("id") String messageId,
-                              final @Headers Map<String, String> headers)
+        public void onMessage(Message message, String messageContent, @Header("id") String messageId,
+                              @Headers Map<String, String> headers)
         {
             logger.info("Received message '{}', content '{}', id '{}', headers '{}'",
                     message, messageContent, messageId, headers);

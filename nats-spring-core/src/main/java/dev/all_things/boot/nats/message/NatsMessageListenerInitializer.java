@@ -43,7 +43,7 @@ public class NatsMessageListenerInitializer
 		this.method = method;
 		this.annotation = annotation;
 		this.isVoid = method.getReturnType() == void.class;
-		this.replyTo = StringUtils.defaultString(annotation.replyTo()).strip();
+		this.replyTo = StringUtils.defaultString(annotation.replySubject()).strip();
 
 		validate();
 	}

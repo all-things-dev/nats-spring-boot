@@ -14,11 +14,10 @@
 	</parent>
 
 	<artifactId>nats-spring-core</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
-	<name>NATS Spring Boot Core</name>
+	<name>NATS Spring Core</name>
 	<description>Core implementation of abstractions for NATS</description>
 
 	<dependencies>

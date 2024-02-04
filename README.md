@@ -75,6 +75,26 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
    However, `replySubject` needs to be explicitly set for the reply type `io.nats.client.Message` and the value
    set via annotation will be ignored.
 
+3. Listener with an unspecified reply type
+
+    ```java
+    @NatsListener(subject = "matrix.smith", replySubject = "matrix")
+    public Object onMessageWithGenericReply(final String message)
+    {
+    	logger.info("Received message: {}", message);
+    
+    	return switch (new Random(System.nanoTime()).nextInt(3))
+    	{
+    		case 0 -> "Hello - From The Matrix";
+    		case 1 -> UUID.randomUUID().toString();
+    		default -> "Hello - From The Matrix".getBytes(StandardCharsets.UTF_8);
+    	};
+    }
+    ```
+   **TIP**: A special handler will be created for listener methods with an unspecified return type which may be slightly inefficient.
+   Also, error related to unsupported return types will be thrown at runtime.
+   Use this feature only when necessary.
+
 ## Attribute Injection
 
 Certain attributes of the incoming message can be implicitly extracted and injected as parameters to the listener method.

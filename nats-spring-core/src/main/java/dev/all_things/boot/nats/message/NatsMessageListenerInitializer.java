@@ -96,6 +96,7 @@ public class NatsMessageListenerInitializer
 		if (replyType == Message.class) { return new MessageSender(); }
 		if (replyType == String.class) { return new SimpleMessageSender(replySubject); }
 		if (replyType == byte[].class) { return new RawMessageSender(replySubject); }
+		if (replyType == Object.class) { return new DelegatingMessageSender(replySubject); }
 
 		throw new IllegalArgumentException("Unsupported reply type '" + replyType.getName() + "' for listener method");
 	}

@@ -56,7 +56,6 @@ public class NatsMessageListener
 		}
 		catch (final Throwable e)
 		{
-			logger.error(e.getMessage());
 			logger.error(e.getMessage(), e);
 
 			final String errorMessage = String.format("Failed to invoke message listener for subject '%s' due to '%s' ..", this.subject, e.getMessage());

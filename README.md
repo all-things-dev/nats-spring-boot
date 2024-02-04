@@ -71,6 +71,9 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
         }
     }
     ```
+   **TIP**: Listener methods support `io.nats.client.Message`, `java.lang.String` and `byte[]` as reply types.
+   However, `replySubject` needs to be explicitly set for the reply type `io.nats.client.Message` and the value
+   set via annotation will be ignored.
 
 ## Attribute Injection
 

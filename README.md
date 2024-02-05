@@ -62,7 +62,7 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
     @Component
     public class MessageListener
     {
-        @NatsListener(subject = "zion.neo", replySubject = "zion.trinity")
+        @NatsListener(subject = "zion.neo", reply = @Reply(subject = "zion.trinity"))
         public String onMessage(String message)
         {
             logger.info("Received message: {}", message); // Hello, Neo
@@ -72,13 +72,13 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
     }
     ```
    **TIP**: Listener methods support `io.nats.client.Message`, `java.lang.String` and `byte[]` as reply types.
-   However, `replySubject` needs to be explicitly set for the reply type `io.nats.client.Message` and the value
+   However, user needs to explicitly set subject for the reply type `io.nats.client.Message` and the value
    set via annotation will be ignored.
 
 3. Listener with an unspecified reply type
 
     ```java
-    @NatsListener(subject = "matrix.smith", replySubject = "matrix")
+    @NatsListener(subject = "matrix.smith", reply = @Reply(subject = "matrix"))
     public Object onMessageWithGenericReply(final String message)
     {
     	logger.info("Received message: {}", message);

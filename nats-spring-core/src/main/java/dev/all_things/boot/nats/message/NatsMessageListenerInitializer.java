@@ -41,7 +41,7 @@ public class NatsMessageListenerInitializer
 		this.targetClass = targetClass;
 		this.method = method;
 		this.annotation = annotation;
-		this.replySubject = StringUtils.defaultString(annotation.replySubject()).strip();
+		this.replySubject = StringUtils.defaultString(annotation.reply().subject()).strip();
 
 		validate();
 	}

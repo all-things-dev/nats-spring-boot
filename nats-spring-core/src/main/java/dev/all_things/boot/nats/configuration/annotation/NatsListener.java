@@ -2,8 +2,6 @@ package dev.all_things.boot.nats.configuration.annotation;
 
 import java.lang.annotation.*;
 
-import io.nats.client.Message;
-
 /**
  * Specifies the method as NATS message handler.
  */
@@ -18,13 +16,9 @@ public @interface NatsListener
 	String subject();
 
 	/**
-	 * @return (Optional) subject to which method replies will be sent.
-	 * However, precedence order for deciding the actual subject is as follows -
-	 * 1. {@link Message#getSubject()} from the {@link Message} returned by listener method.
-	 * 2. {@link Message#getReplyTo()} from the incoming message.
-	 * 3. This value.
+	 * @return information required for sending replies.
 	 */
-	String replySubject() default "";
+	Reply reply() default @Reply(subject = "");
 }
 
 

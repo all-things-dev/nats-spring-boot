@@ -20,7 +20,7 @@ public class NatsMessageListener
 	private final ListenerArgumentGenerator argumentGenerator;
 	private final MessageSender replySender;
 
-	NatsMessageListener(final Connection connection, final String subject, final MethodHandle methodRef,
+	public NatsMessageListener(final Connection connection, final String subject, final MethodHandle methodRef,
 						final ListenerArgumentGenerator argumentGenerator, final MessageSender replySender)
 	{
 		this.connection = Objects.requireNonNull(connection, "Connection must not be null");

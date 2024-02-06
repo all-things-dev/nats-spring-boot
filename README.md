@@ -7,13 +7,13 @@ Spring Boot for NATS enables declarative abstractions for implementing NATS in S
 
 ## Getting Started
 
-1. Add `nats-spring-core` dependency to your `pom.xml` file:
+1. Add `nats-spring-boot-starter` dependency to your `pom.xml` file:
 
     ```xml
     <dependency>
 	    <groupId>dev.all-things.boot</groupId>
-	    <artifactId>nats-spring-core</artifactId>
-	    <version>${nats-spring-boot.version}</version>
+	    <artifactId>nats-spring-boot-starter</artifactId>
+	    <version>0.1.0</version>
     </dependency>
     ```
 
@@ -120,8 +120,6 @@ Certain attributes of the incoming message can be implicitly extracted and injec
 
 2. Unannotated parameters of types `io.nats.client.Message`, `java.lang.String` and/or `byte[]`
    are automatically treated as message content and injected accordingly.
-
-4. Add `nats-spring-boot-starter` dependency to your project.
 
 ## Differences from Spring Kafka
 
